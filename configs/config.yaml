@@ -1,0 +1,71 @@
+# ==============================================================================
+# Configuration for Attention-Based Image Caption Generation
+# CNN (ResNet-50) + Transformer Architecture
+# ==============================================================================
+
+# Project metadata
+project_name: "Attention-Based Image Caption Generation Using CNN and Transformer Architectures"
+seed: 42
+device: "cpu"  # Auto-selected in code (cuda if available else cpu)
+
+# Dataset paths and parameters
+dataset:
+  data_dir: "data/Flickr8k"
+  images_dir: "data/Flickr8k/Images"
+  captions_file: "data/Flickr8k/captions.txt"
+  splits_dir: "data/Flickr8k/splits"
+  train_split: 0.80
+  val_split: 0.10
+  test_split: 0.10
+  min_freq: 3
+  max_seq_length: 30
+  image_size: 224
+
+# Model Architecture Hyperparameters
+model:
+  encoder:
+    backbone: "resnet50"
+    pretrained: true
+    freeze_backbone: true
+    cnn_out_dim: 2048
+    spatial_regions: 49  # 7x7 grid
+  projection:
+    d_model: 256
+  decoder:
+    d_model: 256
+    nhead: 4
+    num_layers: 2
+    dim_feedforward: 512
+    dropout: 0.1
+    max_len: 100
+
+# Baseline Model (CNN + LSTM)
+baseline:
+  hidden_dim: 256
+  num_layers: 1
+  embed_dim: 256
+  dropout: 0.1
+
+# Training Hyperparameters
+training:
+  batch_size: 64
+  num_workers: 0
+  epochs: 12
+  learning_rate: 0.0005
+  weight_decay: 0.00005
+  grad_clip: 5.0
+  early_stopping_patience: 4
+  checkpoint_dir: "checkpoints"
+  save_best_only: true
+
+# Evaluation and Decoding
+evaluation:
+  batch_size: 16
+  beam_size: 3
+  max_generate_len: 25
+  results_dir: "results"
+
+# Visualization
+visualization:
+  attention_dir: "results/attention_visualizations"
+  num_samples_to_visualize: 10
